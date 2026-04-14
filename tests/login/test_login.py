@@ -4,7 +4,7 @@ These tests implement the scenarios described in `features/login.feature` and
 exercise the login flow using Playwright's `page` fixture and simple page
 objects (`LoginPage`, `InventoryPage`).
 """
-
+import logging
 from pages.login_page import LoginPage
 from pages.inventory_page import InventoryPage
 
@@ -15,6 +15,8 @@ def test_successful_login(page, base_url):
     Verifies that a standard user can log in and reach the inventory page where
     the main menu is visible.
     """
+    logging.info("Starting test: test_successful_login...")
+
     login = LoginPage(page, base_url)
     login.goto()
     login.login("standard_user", "secret_sauce")
@@ -30,6 +32,7 @@ def test_failed_login_invalid_password(page, base_url):
     Submitting a wrong password shows an error containing the expected text
     and does not allow navigation to the inventory page.
     """
+    logging.info("Starting test: test_failed_login_invalid_password...")
     login = LoginPage(page, base_url)
     login.goto()
     login.login("standard_user", "wrongpassword")
@@ -49,6 +52,7 @@ def test_failed_login_invalid_username(page, base_url):
     Submitting a non-existent username shows the same invalid-credentials
     message and keeps the user on the login page.
     """
+    logging.info("Starting test: test_failed_login_invalid_username...")
     login = LoginPage(page, base_url)
     login.goto()
     login.login("bad_username", "secret_sauce")
@@ -68,6 +72,7 @@ def test_empty_fields_no_error_displayed(page, base_url):
     live site displays a validation error; assert that behavior and ensure the
     user remains on the login page.
     """
+    logging.info("Starting test: test_empty_fields_no_error_displayed...")
     login = LoginPage(page, base_url)
     login.goto()
     login.click_login()
