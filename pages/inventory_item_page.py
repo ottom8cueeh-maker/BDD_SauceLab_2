@@ -13,16 +13,35 @@ class InventoryItemPage:
         self.name = page.locator('.inventory_details_name')
         self.description = page.locator('.inventory_details_desc')
         self.price = page.locator('.inventory_details_price')
-        self.add_button = page.locator('button.btn_inventory')
+        # The same button is used for both 'Add to cart' and 'Remove' states.
+        # Use `toggle_button` and inspect its text to decide current state.
+        self.toggle_button = page.locator('button.btn_inventory')
         self.back_button = page.locator('button.inventory_details_back_button')
 
+    def is_in_cart(self) -> bool:
+        """Return True if the product is currently in the cart.
+
+        The product detail view uses the same button for adding and removing;
+        when its visible text contains "Remove" we treat the item as in-cart.
+        """
+        text = (self.toggle_button.text_content() or "").strip().lower()
+        return "remove" in text
+
     def add_to_cart(self):
-        """Click the add-to-cart button on the product detail page."""
-        self.add_button.click()
+        """Add the product to the cart if it is not already added.
+
+        If the item is already in the cart this is a no-op.
+        """
+        if not self.is_in_cart():
+            self.toggle_button.click()
 
     def remove_from_cart(self):
-        """Click the remove-from-cart button on the product detail page."""
-        self.add_button.click()
+        """Remove the product from the cart if it is currently added.
+
+        If the item is not in the cart this is a no-op.
+        """
+        if self.is_in_cart():
+            self.toggle_button.click()
 
     def back_to_products(self):
         """Return to the inventory/product listing by clicking back."""
