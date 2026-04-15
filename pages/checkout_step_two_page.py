@@ -11,7 +11,9 @@ class CheckoutStepTwoPage:
         self.cancel_button = page.locator('#cancel')
 
     def finish(self):
+        """Finish the checkout and submit the order."""
         self.finish_button.click()
 
     def get_summary_text(self) -> str:
+        """Return the order summary text shown on the overview page."""
         return self.summary_info.text_content()
