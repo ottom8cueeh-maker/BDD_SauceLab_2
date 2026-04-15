@@ -13,9 +13,11 @@ class CheckoutStepOnePage:
         self.cancel_button = page.locator('#cancel')
 
     def fill_information(self, first: str, last: str, postal: str):
+        """Fill the checkout contact form with `first`, `last`, and `postal`."""
         self.first_name.fill(first)
         self.last_name.fill(last)
         self.postal_code.fill(postal)
 
     def continue_checkout(self):
+        """Click the continue button to advance to the checkout overview."""
         self.continue_button.click()

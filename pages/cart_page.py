@@ -13,10 +13,13 @@ class CartPage:
         self.continue_shopping = page.locator('#continue-shopping')
 
     def remove_item_by_index(self, index: int = 0):
+        """Remove the cart item at `index` by clicking its remove button."""
         self.remove_buttons.nth(index).click()
 
     def get_cart_items_count(self) -> int:
+        """Return the number of items currently listed in the cart."""
         return self.cart_items.count()
 
     def proceed_to_checkout(self):
+        """Click the checkout button to begin the checkout flow."""
         self.checkout_button.click()
