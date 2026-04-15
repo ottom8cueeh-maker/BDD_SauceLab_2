@@ -21,7 +21,8 @@ class InventoryPage:
         # product elements
         self.product_items = page.locator('.inventory_item')
         self.product_names = page.locator('.inventory_item_name')
-        self.add_buttons = page.locator('button.btn_inventory')
+        # The same button is used for both 'Add to cart' and 'Remove' states
+        self.toggle_buttons = page.locator('button.btn_inventory')
         # cart link / badge
         self.cart_link = page.locator('.shopping_cart_link')
         self.cart_badge = page.locator('.shopping_cart_badge')
@@ -38,12 +39,24 @@ class InventoryPage:
         """Open the left-side menu by clicking the hamburger button."""
         self.menu_button.click()
 
-    def add_product_to_cart_by_index(self, index: int = 0):
-        """Click the add-to-cart button for the product at `index`.
+    def is_in_cart_by_index(self, index: int = 0) -> bool:
+        """Return True if the product at `index` appears to be in the cart.
 
-        Index is zero-based and will raise if out-of-range.
+        The inventory list uses the same button for add/remove; when its
+        visible text contains "Remove" we treat the item as already in-cart.
         """
-        self.add_buttons.nth(index).click()
+        text = (self.toggle_buttons.nth(index).text_content() or "").strip().lower()
+        return "remove" in text
+
+    def add_product_to_cart_by_index(self, index: int = 0):
+        """Add the product at `index` to the cart if not already added."""
+        if not self.is_in_cart_by_index(index):
+            self.toggle_buttons.nth(index).click()
+
+    def remove_product_from_cart_by_index(self, index: int = 0):
+        """Remove the product at `index` from the cart if currently added."""
+        if self.is_in_cart_by_index(index):
+            self.toggle_buttons.nth(index).click()
 
     def go_to_cart(self):
         """Navigate to the cart page by clicking the cart link."""
